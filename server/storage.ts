@@ -1,7 +1,7 @@
 import { type App, type InsertApp, apps } from "@shared/schema";
 import { randomUUID } from "crypto";
-import { drizzle } from "drizzle-orm/neon-serverless";
-import { Pool } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
 import { eq } from "drizzle-orm";
 import * as schema from "@shared/schema";
 
@@ -65,9 +65,14 @@ export class MemStorage implements IStorage {
 
 export class DbStorage implements IStorage {
   private db;
+  private pool;
 
   constructor(databaseUrl: string) {
-    this.db = drizzle(databaseUrl, { schema });
+    this.pool = new Pool({
+      connectionString: databaseUrl,
+      ssl: false, // Railway internal connections don't need SSL
+    });
+    this.db = drizzle(this.pool, { schema });
   }
 
   async getApp(id: string): Promise<App | undefined> {
