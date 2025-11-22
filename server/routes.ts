@@ -47,6 +47,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get("/api/auth/check", (req, res) => {
+    // Prevent caching of auth status to ensure fresh data after login
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    
     if (req.isAuthenticated()) {
       return res.json({ authenticated: true, user: req.user });
     }
