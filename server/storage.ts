@@ -1,8 +1,9 @@
 import { type App, type InsertApp, apps } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { drizzle } from "drizzle-orm/neon-serverless";
-import { neon } from "@neondatabase/serverless";
+import { Pool } from "@neondatabase/serverless";
 import { eq } from "drizzle-orm";
+import * as schema from "@shared/schema";
 
 export interface IStorage {
   getApp(id: string): Promise<App | undefined>;
@@ -66,8 +67,7 @@ export class DbStorage implements IStorage {
   private db;
 
   constructor(databaseUrl: string) {
-    const sql = neon(databaseUrl);
-    this.db = drizzle(sql);
+    this.db = drizzle(databaseUrl, { schema });
   }
 
   async getApp(id: string): Promise<App | undefined> {
@@ -105,6 +105,6 @@ if (!databaseUrl) {
   console.warn("⚠️  DATABASE_URL not found. Using in-memory storage. Data will be lost on restart!");
 }
 
-export const storage: IStorage = databaseUrl 
-  ? new DbStorage(databaseUrl) 
+export const storage: IStorage = databaseUrl
+  ? new DbStorage(databaseUrl)
   : new MemStorage();
