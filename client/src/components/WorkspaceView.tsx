@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ExternalLink, RefreshCw, X, Search } from "lucide-react";
+import { ExternalLink, RefreshCw, X, Search, PanelLeft } from "lucide-react";
 import type { App } from "@shared/schema";
+import { cn } from "@/lib/utils";
 
 interface WorkspaceViewProps {
   apps: App[];
@@ -46,11 +47,17 @@ export function WorkspaceView({ apps }: WorkspaceViewProps) {
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
   const [workspaceSearch, setWorkspaceSearch] = useState("");
   const [iframeKey, setIframeKey] = useState(0);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
   const filteredApps = apps.filter((app) => {
     const matchesSearch = app.name.toLowerCase().includes(workspaceSearch.toLowerCase());
     return matchesSearch && app.liveUrl;
   });
+
+  const handleAppSelect = (app: App) => {
+    setSelectedApp(app);
+    setIsDrawerOpen(false);
+  };
 
   const handleReload = () => {
     setIframeKey((prev) => prev + 1);
@@ -67,56 +74,105 @@ export function WorkspaceView({ apps }: WorkspaceViewProps) {
   };
 
   return (
-    <div className="flex h-[calc(100vh-140px)] gap-4">
-      {/* Left Sidebar - App List */}
-      <div className="w-64 flex-shrink-0 flex flex-col gap-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search within filtered apps..."
-            value={workspaceSearch}
-            onChange={(e) => setWorkspaceSearch(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-
-        <div className="flex-1 overflow-y-auto space-y-2 pr-2">
-          {filteredApps.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-sm text-muted-foreground">
-                {apps.filter((app) => app.liveUrl).length === 0
-                  ? "No apps with live URLs found. Add live URLs to your apps to use the workspace."
-                  : "No apps match your search."}
-              </p>
-            </div>
-          ) : (
-            filteredApps.map((app) => (
-              <Card
-                key={app.id}
-                className={`cursor-pointer transition-all hover:shadow-md ${
-                  selectedApp?.id === app.id
-                    ? "ring-2 ring-primary shadow-md"
-                    : "hover:ring-1 hover:ring-border"
-                }`}
-                onClick={() => setSelectedApp(app)}
-              >
-                <CardContent className="p-4 flex items-center gap-3">
-                  <AppIcon app={app} />
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-medium truncate">{app.name}</h3>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {app.category}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))
-          )}
-        </div>
+    <div className="relative h-[calc(100vh-140px)] flex flex-col gap-4">
+      {/* App Drawer Toggle Button */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+          className="gap-2"
+        >
+          <PanelLeft className="h-4 w-4" />
+          Apps
+        </Button>
+        {selectedApp && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>•</span>
+            <AppIcon app={selectedApp} />
+            <span className="font-medium text-foreground">{selectedApp.name}</span>
+          </div>
+        )}
       </div>
 
-      {/* Right Panel - Embedded App */}
-      <div className="flex-1 flex flex-col gap-4">
+      {/* Overlay Drawer - App List */}
+      <>
+        {/* Backdrop */}
+        <div
+          className={cn(
+            "fixed inset-0 z-30 bg-black/20 transition-opacity",
+            isDrawerOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          )}
+          onClick={() => setIsDrawerOpen(false)}
+        />
+        
+        {/* Drawer */}
+        <div
+          className={cn(
+            "fixed inset-y-0 left-0 z-40 w-80 bg-background/98 backdrop-blur-sm border-r shadow-2xl transition-transform duration-300 ease-in-out flex flex-col",
+            isDrawerOpen ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
+          <div className="p-4 border-b">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Select App</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsDrawerOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search within filtered apps..."
+                value={workspaceSearch}
+                onChange={(e) => setWorkspaceSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-4 space-y-2">
+            {filteredApps.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-sm text-muted-foreground">
+                  {apps.filter((app) => app.liveUrl).length === 0
+                    ? "No apps with live URLs found. Add live URLs to your apps to use the workspace."
+                    : "No apps match your search."}
+                </p>
+              </div>
+            ) : (
+              filteredApps.map((app) => (
+                <Card
+                  key={app.id}
+                  className={`cursor-pointer transition-all hover:shadow-md ${
+                    selectedApp?.id === app.id
+                      ? "ring-2 ring-primary shadow-md"
+                      : "hover:ring-1 hover:ring-border"
+                  }`}
+                  onClick={() => handleAppSelect(app)}
+                >
+                  <CardContent className="p-4 flex items-center gap-3">
+                    <AppIcon app={app} />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium truncate">{app.name}</h3>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {app.category}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        </div>
+      </>
+
+      {/* Main Content - Embedded App */}
+      <div className="flex-1 flex flex-col gap-4 min-h-0">
         {selectedApp ? (
           <>
             {/* Header Bar */}
@@ -197,8 +253,8 @@ export function WorkspaceView({ apps }: WorkspaceViewProps) {
               </div>
               <h2 className="text-2xl font-semibold">Welcome to Workspace</h2>
               <p className="text-muted-foreground">
-                Select an app from the left sidebar to view it here. Your apps will be embedded
-                directly in this workspace for quick access.
+                Click the "Apps" button to select an app to view here. Your apps will be embedded
+                directly in this workspace for quick access and maximum screen space.
               </p>
               <p className="text-sm text-muted-foreground">
                 Tip: Apps with live URLs can be embedded. Use the "Open in Tab" button if an app
