@@ -6,6 +6,9 @@ import passport from "./auth";
 
 const app = express();
 
+// Trust Railway's proxy for secure cookies
+app.set("trust proxy", 1);
+
 declare module 'http' {
   interface IncomingMessage {
     rawBody: unknown
