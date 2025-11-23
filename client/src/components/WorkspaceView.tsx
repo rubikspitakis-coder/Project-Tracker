@@ -7,7 +7,6 @@ import type { App } from "@shared/schema";
 
 interface WorkspaceViewProps {
   apps: App[];
-  selectedCategory: string;
 }
 
 const getFaviconUrl = (url: string) => {
@@ -43,15 +42,14 @@ const AppIcon = ({ app }: { app: App }) => {
   );
 };
 
-export function WorkspaceView({ apps, selectedCategory }: WorkspaceViewProps) {
+export function WorkspaceView({ apps }: WorkspaceViewProps) {
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [workspaceSearch, setWorkspaceSearch] = useState("");
   const [iframeKey, setIframeKey] = useState(0);
 
   const filteredApps = apps.filter((app) => {
-    const matchesSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "all" || app.category === selectedCategory;
-    return matchesSearch && matchesCategory && app.liveUrl;
+    const matchesSearch = app.name.toLowerCase().includes(workspaceSearch.toLowerCase());
+    return matchesSearch && app.liveUrl;
   });
 
   const handleReload = () => {
@@ -69,15 +67,15 @@ export function WorkspaceView({ apps, selectedCategory }: WorkspaceViewProps) {
   };
 
   return (
-    <div className="flex h-[calc(100vh-180px)] gap-4">
+    <div className="flex h-[calc(100vh-140px)] gap-4">
       {/* Left Sidebar - App List */}
-      <div className="w-80 flex-shrink-0 flex flex-col gap-4">
+      <div className="w-64 flex-shrink-0 flex flex-col gap-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search apps..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search within filtered apps..."
+            value={workspaceSearch}
+            onChange={(e) => setWorkspaceSearch(e.target.value)}
             className="pl-9"
           />
         </div>

@@ -218,22 +218,20 @@ export default function Dashboard() {
               </div>
             )}
           </div>
-          {workspaceMode === "overview" && (
-            <FilterBar
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              selectedPlatform={selectedPlatform}
-              onPlatformChange={setSelectedPlatform}
-              selectedStatus={selectedStatus}
-              onStatusChange={setSelectedStatus}
-              selectedCategory={selectedCategory}
-              onCategoryChange={setSelectedCategory}
-            />
-          )}
+          <FilterBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedPlatform={selectedPlatform}
+            onPlatformChange={setSelectedPlatform}
+            selectedStatus={selectedStatus}
+            onStatusChange={setSelectedStatus}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
         </div>
 
         {workspaceMode === "workspace" ? (
-          <WorkspaceView apps={apps} selectedCategory={selectedCategory} />
+          <WorkspaceView apps={filteredApps} />
         ) : (
           <>
             {filteredApps.length === 0 ? (
