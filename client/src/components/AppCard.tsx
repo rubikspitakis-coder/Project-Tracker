@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,16 +44,45 @@ const getDisplayRepoUrl = (url: string) => {
   }
 };
 
+const getFaviconUrl = (url: string) => {
+  try {
+    const u = new URL(url);
+    return `${u.origin}/favicon.ico`;
+  } catch {
+    return null;
+  }
+};
+
+const AppIcon = ({ app }: { app: App }) => {
+  const faviconUrl = app.liveUrl ? getFaviconUrl(app.liveUrl) : null;
+  const [showFallback, setShowFallback] = React.useState(false);
+
+  if (!faviconUrl || showFallback) {
+    return (
+      <div className="w-6 h-6 rounded bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <span className="text-xs font-medium text-primary">
+          {app.name.charAt(0).toUpperCase()}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={faviconUrl}
+      alt={`${app.name} icon`}
+      className="w-6 h-6 flex-shrink-0 object-contain"
+      onError={() => setShowFallback(true)}
+    />
+  );
+};
+
 export function AppCard({ app, onEdit, onArchive, onDelete }: AppCardProps) {
   return (
     <Card className="hover-elevate active-elevate-2" data-testid={`card-app-${app.id}`}>
       <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0 pb-3">
         <div className="flex-1 min-w-0 flex items-center gap-2">
-          {app.icon && (
-            <span className="text-2xl flex-shrink-0" data-testid={`icon-${app.id}`}>
-              {app.icon}
-            </span>
-          )}
+          <AppIcon app={app} />
           <h3 className="text-lg font-medium truncate" data-testid={`text-app-name-${app.id}`}>
             {app.name}
           </h3>

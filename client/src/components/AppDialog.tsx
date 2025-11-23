@@ -45,7 +45,6 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
       platform: "Railway",
       status: "In Development",
       category: "Personal",
-      icon: undefined,
       liveUrl: "" as string,
       repositoryUrl: "" as string,
       notes: "" as string,
@@ -58,7 +57,6 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
       platform: app?.platform || "Railway",
       status: app?.status || "In Development",
       category: app?.category || "Personal",
-      icon: app?.icon ?? undefined,
       liveUrl: (app?.liveUrl || "") as string,
       repositoryUrl: (app?.repositoryUrl || "") as string,
       notes: (app?.notes || "") as string,
@@ -160,48 +158,6 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
                     <SelectContent>
                       <SelectItem value="Work">Work</SelectItem>
                       <SelectItem value="Personal">Personal</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="icon"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>App Icon (Optional)</FormLabel>
-                  <Select
-                    onValueChange={(value) =>
-                      field.onChange(value === "none" ? undefined : value)
-                    }
-                    value={field.value ?? "none"}
-                  >
-                    <FormControl>
-                      <SelectTrigger data-testid="select-icon">
-                        <SelectValue placeholder="Select an icon" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="none">None</SelectItem>
-                      <SelectItem value="📱">📱 Mobile App</SelectItem>
-                      <SelectItem value="💻">💻 Desktop App</SelectItem>
-                      <SelectItem value="🌐">🌐 Web App</SelectItem>
-                      <SelectItem value="🎮">🎮 Game</SelectItem>
-                      <SelectItem value="🛒">🛒 E-commerce</SelectItem>
-                      <SelectItem value="📊">📊 Analytics</SelectItem>
-                      <SelectItem value="💬">💬 Chat/Social</SelectItem>
-                      <SelectItem value="📝">📝 Productivity</SelectItem>
-                      <SelectItem value="🎨">🎨 Design Tool</SelectItem>
-                      <SelectItem value="🔧">🔧 Utility</SelectItem>
-                      <SelectItem value="📚">📚 Education</SelectItem>
-                      <SelectItem value="🏥">🏥 Healthcare</SelectItem>
-                      <SelectItem value="💰">💰 Finance</SelectItem>
-                      <SelectItem value="🎵">🎵 Music/Audio</SelectItem>
-                      <SelectItem value="📷">📷 Photo/Video</SelectItem>
-                      <SelectItem value="🚀">🚀 Startup</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
