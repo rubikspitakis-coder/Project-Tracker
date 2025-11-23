@@ -48,7 +48,7 @@ export function WorkspaceView({ apps }: WorkspaceViewProps) {
   const [selectedApp, setSelectedApp] = useState<App | null>(null);
   const [workspaceSearch, setWorkspaceSearch] = useState("");
   const [iframeKey, setIframeKey] = useState(0);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const filteredApps = apps.filter((app) => {
     const matchesSearch = app.name.toLowerCase().includes(workspaceSearch.toLowerCase());
