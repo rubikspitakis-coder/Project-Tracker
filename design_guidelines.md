@@ -1,5 +1,14 @@
 # Design Guidelines: Application Management Dashboard
 
+## Recent Updates
+
+### Workspace Mode (November 2024)
+- Added workspace view with collapsible drawer for app selection
+- Drawer starts closed by default for maximum screen space
+- Full-width iframe embedding for embedded apps
+- Auto-close drawer behavior when selecting apps
+- Overlay drawer design (fixed positioning) to avoid layout reflow
+
 ## Design Approach
 
 **Selected Approach:** Design System - Modern Developer Dashboard

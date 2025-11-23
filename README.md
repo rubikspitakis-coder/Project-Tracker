@@ -6,6 +6,11 @@ A centralized dashboard application for tracking and managing applications acros
 
 - 🔒 **Secure Authentication** - Single-user password protection
 - 📊 **Application Management** - Track projects across multiple platforms
+- 🖥️ **Workspace Mode** - Embed and interact with apps directly in the dashboard
+  - Collapsible drawer for app selection (starts closed for maximum screen space)
+  - Full-width iframe embedding for maximum viewing area
+  - Auto-close drawer when selecting apps
+  - All filtering options available in workspace mode
 - 🏷️ **Categorization** - Organize apps by platform, status, and category
 - 🔍 **Search & Filter** - Quickly find applications
 - 🌓 **Dark Mode** - Built-in theme toggle
