@@ -43,7 +43,7 @@
 - Border bottom separator
 
 **2. Filter/Control Bar**
-- Horizontal tab-style filters for platforms (All, Replit, Lovable, Railway, Custom)
+- Horizontal tab-style filters for platforms (All, Lovable, Railway, Custom)
 - Status dropdown filter
 - Sort options (Recent, A-Z, Status)
 - Positioned below header with sticky behavior

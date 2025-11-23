@@ -1,6 +1,6 @@
 # Project Tracker
 
-A centralized dashboard application for tracking and managing applications across multiple development platforms including Replit, Lovable, Railway, and custom platforms.
+A centralized dashboard application for tracking and managing applications across multiple development platforms including Lovable, Railway, and custom platforms.
 
 ## Features
 
@@ -170,7 +170,7 @@ The app uses a single `apps` table:
 |-----------------|-----------|---------------------------------------|
 | id              | UUID      | Primary key (auto-generated)          |
 | name            | text      | Application name                      |
-| platform        | text      | Platform (Replit, Lovable, etc.)      |
+| platform        | text      | Platform (Lovable, Railway, etc.)     |
 | status          | text      | Status (Active, In Development, etc.) |
 | category        | text      | Category (Personal, Work, etc.)       |
 | live_url        | text      | URL to live deployment (optional)     |
