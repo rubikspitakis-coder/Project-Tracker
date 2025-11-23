@@ -6,7 +6,8 @@ import { AppCard } from "@/components/AppCard";
 import { AppDialog } from "@/components/AppDialog";
 import { FilterBar } from "@/components/FilterBar";
 import { EmptyState } from "@/components/EmptyState";
-import { Plus, LogOut, LayoutGrid, List } from "lucide-react";
+import { WorkspaceView } from "@/components/WorkspaceView";
+import { Plus, LogOut, LayoutGrid, List, Monitor } from "lucide-react";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import type { App, InsertApp } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -20,6 +21,7 @@ export default function Dashboard() {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [workspaceMode, setWorkspaceMode] = useState<"overview" | "workspace">("overview");
 
   const { data: apps = [], isLoading } = useQuery<App[]>({
     queryKey: ["/api/apps"],
@@ -177,24 +179,44 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Button
-                variant={viewMode === "grid" ? "default" : "outline"}
-                size="icon"
-                onClick={() => setViewMode("grid")}
-                title="Grid view"
-                data-testid="button-grid-view"
+                variant={workspaceMode === "overview" ? "default" : "outline"}
+                onClick={() => setWorkspaceMode("overview")}
+                data-testid="button-overview-mode"
               >
-                <LayoutGrid className="h-4 w-4" />
+                <LayoutGrid className="h-4 w-4 mr-2" />
+                Overview
               </Button>
               <Button
-                variant={viewMode === "list" ? "default" : "outline"}
-                size="icon"
-                onClick={() => setViewMode("list")}
-                title="List view"
-                data-testid="button-list-view"
+                variant={workspaceMode === "workspace" ? "default" : "outline"}
+                onClick={() => setWorkspaceMode("workspace")}
+                data-testid="button-workspace-mode"
               >
-                <List className="h-4 w-4" />
+                <Monitor className="h-4 w-4 mr-2" />
+                Workspace
               </Button>
             </div>
+            {workspaceMode === "overview" && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant={viewMode === "grid" ? "default" : "outline"}
+                  size="icon"
+                  onClick={() => setViewMode("grid")}
+                  title="Grid view"
+                  data-testid="button-grid-view"
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "default" : "outline"}
+                  size="icon"
+                  onClick={() => setViewMode("list")}
+                  title="List view"
+                  data-testid="button-list-view"
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
           </div>
           <FilterBar
             searchQuery={searchQuery}
@@ -208,31 +230,37 @@ export default function Dashboard() {
           />
         </div>
 
-        {filteredApps.length === 0 ? (
-          apps.length === 0 ? (
-            <EmptyState onAddApp={() => setDialogOpen(true)} />
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground">
-                No applications match your filters. Try adjusting your search or filters.
-              </p>
-            </div>
-          )
+        {workspaceMode === "workspace" ? (
+          <WorkspaceView apps={filteredApps} />
         ) : (
-          <div className={viewMode === "grid" 
-            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-            : "flex flex-col gap-4"
-          }>
-            {filteredApps.map((app) => (
-              <AppCard
-                key={app.id}
-                app={app}
-                onEdit={handleEditApp}
-                onArchive={handleArchiveApp}
-                onDelete={handleDeleteApp}
-              />
-            ))}
-          </div>
+          <>
+            {filteredApps.length === 0 ? (
+              apps.length === 0 ? (
+                <EmptyState onAddApp={() => setDialogOpen(true)} />
+              ) : (
+                <div className="text-center py-20">
+                  <p className="text-muted-foreground">
+                    No applications match your filters. Try adjusting your search or filters.
+                  </p>
+                </div>
+              )
+            ) : (
+              <div className={viewMode === "grid" 
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+                : "flex flex-col gap-4"
+              }>
+                {filteredApps.map((app) => (
+                  <AppCard
+                    key={app.id}
+                    app={app}
+                    onEdit={handleEditApp}
+                    onArchive={handleArchiveApp}
+                    onDelete={handleDeleteApp}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </main>
 
