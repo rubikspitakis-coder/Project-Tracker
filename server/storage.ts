@@ -33,6 +33,7 @@ export class MemStorage implements IStorage {
     const app: App = {
       ...insertApp,
       id,
+      icon: insertApp.icon || null,
       liveUrl: insertApp.liveUrl || null,
       repositoryUrl: insertApp.repositoryUrl || null,
       notes: insertApp.notes || null,
@@ -49,6 +50,7 @@ export class MemStorage implements IStorage {
     const updatedApp: App = {
       ...app,
       ...insertApp,
+      icon: insertApp.icon !== undefined ? insertApp.icon || null : app.icon,
       liveUrl: insertApp.liveUrl !== undefined ? insertApp.liveUrl || null : app.liveUrl,
       repositoryUrl: insertApp.repositoryUrl !== undefined ? insertApp.repositoryUrl || null : app.repositoryUrl,
       notes: insertApp.notes !== undefined ? insertApp.notes || null : app.notes,

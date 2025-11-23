@@ -13,7 +13,7 @@ export function EmptyState({ onAddApp }: EmptyStateProps) {
       </div>
       <h2 className="text-xl font-semibold mb-2">No applications yet</h2>
       <p className="text-muted-foreground text-center max-w-md mb-6">
-        Start tracking your applications by adding your first one. Keep all your Replit, Lovable, Railway, and custom projects organized in one place.
+        Start tracking your applications by adding your first one. Keep all your Lovable, Railway, and custom projects organized in one place.
       </p>
       <Button onClick={onAddApp} data-testid="button-add-first-app">
         Add Your First App

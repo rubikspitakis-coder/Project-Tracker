@@ -4,11 +4,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { PlatformBadge } from "./PlatformBadge";
 import { StatusIndicator } from "./StatusIndicator";
-import { ExternalLink, Github, MoreVertical, Pencil, Archive } from "lucide-react";
+import { ExternalLink, Github, MoreVertical, Pencil, Archive, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import type { App } from "@shared/schema";
 
@@ -16,13 +17,42 @@ interface AppCardProps {
   app: App;
   onEdit?: (app: App) => void;
   onArchive?: (app: App) => void;
+  onDelete?: (app: App) => void;
 }
 
-export function AppCard({ app, onEdit, onArchive }: AppCardProps) {
+const getDisplayLiveUrl = (url: string) => {
+  try {
+    const { hostname, pathname } = new URL(url);
+    if (!pathname || pathname === "/") return hostname;
+    return `${hostname}${pathname}`;
+  } catch {
+    return url.replace(/^https?:\/\/(www\.)?/, "");
+  }
+};
+
+const getDisplayRepoUrl = (url: string) => {
+  try {
+    const u = new URL(url);
+    if (u.hostname === "github.com") {
+      const parts = u.pathname.split("/").filter(Boolean);
+      if (parts.length >= 2) return `${parts[0]}/${parts[1]}`;
+    }
+    return u.hostname;
+  } catch {
+    return url.replace(/^https?:\/\/(www\.)?/, "");
+  }
+};
+
+export function AppCard({ app, onEdit, onArchive, onDelete }: AppCardProps) {
   return (
     <Card className="hover-elevate active-elevate-2" data-testid={`card-app-${app.id}`}>
       <CardHeader className="flex flex-row items-start justify-between gap-4 space-y-0 pb-3">
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 flex items-center gap-2">
+          {app.icon && (
+            <span className="text-2xl flex-shrink-0" data-testid={`icon-${app.id}`}>
+              {app.icon}
+            </span>
+          )}
           <h3 className="text-lg font-medium truncate" data-testid={`text-app-name-${app.id}`}>
             {app.name}
           </h3>
@@ -60,6 +90,15 @@ export function AppCard({ app, onEdit, onArchive }: AppCardProps) {
                 <Archive className="h-4 w-4 mr-2" />
                 Archive
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                onClick={() => onDelete?.(app)} 
+                data-testid={`menu-delete-${app.id}`}
+                className="text-destructive focus:text-destructive"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -78,8 +117,9 @@ export function AppCard({ app, onEdit, onArchive }: AppCardProps) {
               rel="noopener noreferrer"
               className="text-sm text-primary hover:underline truncate"
               data-testid={`link-live-url-${app.id}`}
+              title={app.liveUrl}
             >
-              {app.liveUrl.replace(/^https?:\/\//, "")}
+              {getDisplayLiveUrl(app.liveUrl)}
             </a>
           </div>
         )}
@@ -93,8 +133,9 @@ export function AppCard({ app, onEdit, onArchive }: AppCardProps) {
               rel="noopener noreferrer"
               className="text-sm text-primary hover:underline truncate"
               data-testid={`link-repo-${app.id}`}
+              title={app.repositoryUrl}
             >
-              {app.repositoryUrl.replace(/^https?:\/\/(www\.)?/, "")}
+              {getDisplayRepoUrl(app.repositoryUrl)}
             </a>
           </div>
         )}

@@ -28,6 +28,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useEffect } from "react";
 
 interface AppDialogProps {
   open: boolean;
@@ -40,15 +41,29 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
   const form = useForm<InsertApp>({
     resolver: zodResolver(insertAppSchema),
     defaultValues: {
+      name: "",
+      platform: "Railway",
+      status: "In Development",
+      category: "Personal",
+      icon: undefined,
+      liveUrl: "" as string,
+      repositoryUrl: "" as string,
+      notes: "" as string,
+    },
+  });
+
+  useEffect(() => {
+    form.reset({
       name: app?.name || "",
-      platform: app?.platform || "Replit",
+      platform: app?.platform || "Railway",
       status: app?.status || "In Development",
       category: app?.category || "Personal",
+      icon: app?.icon ?? undefined,
       liveUrl: (app?.liveUrl || "") as string,
       repositoryUrl: (app?.repositoryUrl || "") as string,
       notes: (app?.notes || "") as string,
-    },
-  });
+    });
+  }, [app, open, form]);
 
   const handleSubmit = (data: InsertApp) => {
     onSubmit(data);
@@ -88,14 +103,13 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Platform</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger data-testid="select-platform">
                           <SelectValue placeholder="Select platform" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Replit">Replit</SelectItem>
                         <SelectItem value="Lovable">Lovable</SelectItem>
                         <SelectItem value="Railway">Railway</SelectItem>
                         <SelectItem value="Custom">Custom/Devin</SelectItem>
@@ -112,7 +126,7 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger data-testid="select-status">
                           <SelectValue placeholder="Select status" />
@@ -137,7 +151,7 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger data-testid="select-category">
                         <SelectValue placeholder="Select category" />
@@ -146,6 +160,48 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
                     <SelectContent>
                       <SelectItem value="Work">Work</SelectItem>
                       <SelectItem value="Personal">Personal</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="icon"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>App Icon (Optional)</FormLabel>
+                  <Select
+                    onValueChange={(value) =>
+                      field.onChange(value === "none" ? undefined : value)
+                    }
+                    value={field.value ?? "none"}
+                  >
+                    <FormControl>
+                      <SelectTrigger data-testid="select-icon">
+                        <SelectValue placeholder="Select an icon" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="none">None</SelectItem>
+                      <SelectItem value="📱">📱 Mobile App</SelectItem>
+                      <SelectItem value="💻">💻 Desktop App</SelectItem>
+                      <SelectItem value="🌐">🌐 Web App</SelectItem>
+                      <SelectItem value="🎮">🎮 Game</SelectItem>
+                      <SelectItem value="🛒">🛒 E-commerce</SelectItem>
+                      <SelectItem value="📊">📊 Analytics</SelectItem>
+                      <SelectItem value="💬">💬 Chat/Social</SelectItem>
+                      <SelectItem value="📝">📝 Productivity</SelectItem>
+                      <SelectItem value="🎨">🎨 Design Tool</SelectItem>
+                      <SelectItem value="🔧">🔧 Utility</SelectItem>
+                      <SelectItem value="📚">📚 Education</SelectItem>
+                      <SelectItem value="🏥">🏥 Healthcare</SelectItem>
+                      <SelectItem value="💰">💰 Finance</SelectItem>
+                      <SelectItem value="🎵">🎵 Music/Audio</SelectItem>
+                      <SelectItem value="📷">📷 Photo/Video</SelectItem>
+                      <SelectItem value="🚀">🚀 Startup</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
