@@ -42,7 +42,7 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
     resolver: zodResolver(insertAppSchema),
     defaultValues: {
       name: "",
-      platform: "Replit",
+      platform: "Railway",
       status: "In Development",
       category: "Personal",
       icon: undefined,
@@ -55,7 +55,7 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
   useEffect(() => {
     form.reset({
       name: app?.name || "",
-      platform: app?.platform || "Replit",
+      platform: app?.platform || "Railway",
       status: app?.status || "In Development",
       category: app?.category || "Personal",
       icon: app?.icon ?? undefined,
@@ -110,7 +110,6 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Replit">Replit</SelectItem>
                         <SelectItem value="Lovable">Lovable</SelectItem>
                         <SelectItem value="Railway">Railway</SelectItem>
                         <SelectItem value="Custom">Custom/Devin</SelectItem>

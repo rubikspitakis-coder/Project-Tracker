@@ -5,13 +5,13 @@ export default function AppCardExample() {
   const mockApp: App = {
     id: "1",
     name: "Portfolio Website",
-    platform: "Replit",
+    platform: "Railway",
     status: "Active",
     category: "Personal",
     icon: "🌐",
-    liveUrl: "https://myportfolio.replit.app",
+    liveUrl: "https://myportfolio.railway.app",
     repositoryUrl: "https://github.com/user/portfolio",
-    notes: "Personal portfolio built with React and Tailwind CSS. Deployed on Replit.",
+    notes: "Personal portfolio built with React and Tailwind CSS. Deployed on Railway.",
     updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
   }
 

@@ -20,6 +20,29 @@ interface AppCardProps {
   onDelete?: (app: App) => void;
 }
 
+const getDisplayLiveUrl = (url: string) => {
+  try {
+    const { hostname, pathname } = new URL(url);
+    if (!pathname || pathname === "/") return hostname;
+    return `${hostname}${pathname}`;
+  } catch {
+    return url.replace(/^https?:\/\/(www\.)?/, "");
+  }
+};
+
+const getDisplayRepoUrl = (url: string) => {
+  try {
+    const u = new URL(url);
+    if (u.hostname === "github.com") {
+      const parts = u.pathname.split("/").filter(Boolean);
+      if (parts.length >= 2) return `${parts[0]}/${parts[1]}`;
+    }
+    return u.hostname;
+  } catch {
+    return url.replace(/^https?:\/\/(www\.)?/, "");
+  }
+};
+
 export function AppCard({ app, onEdit, onArchive, onDelete }: AppCardProps) {
   return (
     <Card className="hover-elevate active-elevate-2" data-testid={`card-app-${app.id}`}>
@@ -94,8 +117,9 @@ export function AppCard({ app, onEdit, onArchive, onDelete }: AppCardProps) {
               rel="noopener noreferrer"
               className="text-sm text-primary hover:underline truncate"
               data-testid={`link-live-url-${app.id}`}
+              title={app.liveUrl}
             >
-              {app.liveUrl.replace(/^https?:\/\//, "")}
+              {getDisplayLiveUrl(app.liveUrl)}
             </a>
           </div>
         )}
@@ -109,8 +133,9 @@ export function AppCard({ app, onEdit, onArchive, onDelete }: AppCardProps) {
               rel="noopener noreferrer"
               className="text-sm text-primary hover:underline truncate"
               data-testid={`link-repo-${app.id}`}
+              title={app.repositoryUrl}
             >
-              {app.repositoryUrl.replace(/^https?:\/\/(www\.)?/, "")}
+              {getDisplayRepoUrl(app.repositoryUrl)}
             </a>
           </div>
         )}

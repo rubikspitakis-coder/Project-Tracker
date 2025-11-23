@@ -62,7 +62,6 @@ export function FilterBar({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Platforms</SelectItem>
-            <SelectItem value="Replit">Replit</SelectItem>
             <SelectItem value="Lovable">Lovable</SelectItem>
             <SelectItem value="Railway">Railway</SelectItem>
             <SelectItem value="Custom">Custom/Devin</SelectItem>

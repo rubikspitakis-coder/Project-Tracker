@@ -9,7 +9,6 @@ export function PlatformBadge({ platform }: PlatformBadgeProps) {
   const getPlatformConfig = (platform: string) => {
     switch (platform.toLowerCase()) {
       case "replit":
-        return { icon: Code2, label: "Replit" };
       case "lovable":
         return { icon: Heart, label: "Lovable" };
       case "railway":
