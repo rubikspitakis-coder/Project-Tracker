@@ -44,7 +44,7 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
       platform: app?.platform || "Replit",
       status: app?.status || "In Development",
       category: app?.category || "Personal",
-      icon: app?.icon || "",
+      icon: app?.icon ?? undefined,
       liveUrl: (app?.liveUrl || "") as string,
       repositoryUrl: (app?.repositoryUrl || "") as string,
       notes: (app?.notes || "") as string,
@@ -160,14 +160,19 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>App Icon (Optional)</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
+                  <Select
+                    onValueChange={(value) =>
+                      field.onChange(value === "none" ? undefined : value)
+                    }
+                    defaultValue={field.value || "none"}
+                  >
                     <FormControl>
                       <SelectTrigger data-testid="select-icon">
                         <SelectValue placeholder="Select an icon" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="none">None</SelectItem>
                       <SelectItem value="📱">📱 Mobile App</SelectItem>
                       <SelectItem value="💻">💻 Desktop App</SelectItem>
                       <SelectItem value="🌐">🌐 Web App</SelectItem>
