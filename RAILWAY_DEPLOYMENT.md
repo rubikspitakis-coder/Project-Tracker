@@ -2,7 +2,7 @@
 
 ## Pre-Deployment
 
-- [ ] All Replit-specific code removed
+- [ ] All platform-specific code removed
 - [ ] PostgreSQL storage implementation complete
 - [ ] Environment variables documented in `.env.example`
 - [ ] `.gitignore` updated with `.env` files
