@@ -252,7 +252,7 @@ export function WorkspaceView({ apps }: WorkspaceViewProps) {
               <div className="w-20 h-20 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
                 <ExternalLink className="h-10 w-10 text-primary" />
               </div>
-              <h2 className="text-2xl font-semibold">Welcome to Workspace</h2>
+              <h2 className="text-2xl font-semibold">Welcome to Workspace v3 (DRAWER BUILD)</h2>
               <p className="text-muted-foreground">
                 Click the "Apps" button to select an app to view here. Your apps will be embedded
                 directly in this workspace for quick access and maximum screen space.
