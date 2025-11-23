@@ -8,6 +8,7 @@ export default function AppCardExample() {
     platform: "Replit",
     status: "Active",
     category: "Personal",
+    icon: "🌐",
     liveUrl: "https://myportfolio.replit.app",
     repositoryUrl: "https://github.com/user/portfolio",
     notes: "Personal portfolio built with React and Tailwind CSS. Deployed on Replit.",
@@ -20,6 +21,7 @@ export default function AppCardExample() {
         app={mockApp}
         onEdit={(app) => console.log('Edit:', app.name)}
         onArchive={(app) => console.log('Archive:', app.name)}
+        onDelete={(app) => console.log('Delete:', app.name)}
       />
     </div>
   )

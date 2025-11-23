@@ -6,7 +6,7 @@ import { AppCard } from "@/components/AppCard";
 import { AppDialog } from "@/components/AppDialog";
 import { FilterBar } from "@/components/FilterBar";
 import { EmptyState } from "@/components/EmptyState";
-import { Plus, LogOut } from "lucide-react";
+import { Plus, LogOut, LayoutGrid, List } from "lucide-react";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import type { App, InsertApp } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [selectedPlatform, setSelectedPlatform] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const { data: apps = [], isLoading } = useQuery<App[]>({
     queryKey: ["/api/apps"],
@@ -99,6 +100,27 @@ export default function Dashboard() {
     }
   };
 
+  const handleDeleteApp = async (app: App) => {
+    if (!confirm(`Are you sure you want to delete "${app.name}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await apiRequest("DELETE", `/api/apps/${app.id}`, {});
+      await queryClient.invalidateQueries({ queryKey: ["/api/apps"] });
+      toast({
+        title: "Success",
+        description: "Application deleted",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete application",
+        variant: "destructive",
+      });
+    }
+  };
+
   const filteredApps = apps.filter((app) => {
     const matchesSearch =
       app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -151,7 +173,29 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
-        <div className="mb-8">
+        <div className="mb-8 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Button
+                variant={viewMode === "grid" ? "default" : "outline"}
+                size="icon"
+                onClick={() => setViewMode("grid")}
+                title="Grid view"
+                data-testid="button-grid-view"
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "default" : "outline"}
+                size="icon"
+                onClick={() => setViewMode("list")}
+                title="List view"
+                data-testid="button-list-view"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
           <FilterBar
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
@@ -175,13 +219,17 @@ export default function Dashboard() {
             </div>
           )
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className={viewMode === "grid" 
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+            : "flex flex-col gap-4"
+          }>
             {filteredApps.map((app) => (
               <AppCard
                 key={app.id}
                 app={app}
                 onEdit={handleEditApp}
                 onArchive={handleArchiveApp}
+                onDelete={handleDeleteApp}
               />
             ))}
           </div>

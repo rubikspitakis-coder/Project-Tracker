@@ -9,6 +9,7 @@ export const apps = pgTable("apps", {
   platform: text("platform").notNull(),
   status: text("status").notNull(),
   category: text("category").notNull(),
+  icon: text("icon"),
   liveUrl: text("live_url"),
   repositoryUrl: text("repository_url"),
   notes: text("notes"),
@@ -19,6 +20,7 @@ export const insertAppSchema = createInsertSchema(apps).omit({
   id: true,
   updatedAt: true,
 }).extend({
+  icon: z.string().optional(),
   liveUrl: z.string().optional(),
   repositoryUrl: z.string().optional(),
   notes: z.string().optional(),
