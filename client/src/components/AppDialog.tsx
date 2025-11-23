@@ -28,6 +28,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useEffect } from "react";
 
 interface AppDialogProps {
   open: boolean;
@@ -40,6 +41,19 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
   const form = useForm<InsertApp>({
     resolver: zodResolver(insertAppSchema),
     defaultValues: {
+      name: "",
+      platform: "Replit",
+      status: "In Development",
+      category: "Personal",
+      icon: undefined,
+      liveUrl: "" as string,
+      repositoryUrl: "" as string,
+      notes: "" as string,
+    },
+  });
+
+  useEffect(() => {
+    form.reset({
       name: app?.name || "",
       platform: app?.platform || "Replit",
       status: app?.status || "In Development",
@@ -48,8 +62,8 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
       liveUrl: (app?.liveUrl || "") as string,
       repositoryUrl: (app?.repositoryUrl || "") as string,
       notes: (app?.notes || "") as string,
-    },
-  });
+    });
+  }, [app, open, form]);
 
   const handleSubmit = (data: InsertApp) => {
     onSubmit(data);
@@ -89,7 +103,7 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Platform</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger data-testid="select-platform">
                           <SelectValue placeholder="Select platform" />
@@ -113,7 +127,7 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger data-testid="select-status">
                           <SelectValue placeholder="Select status" />
@@ -138,7 +152,7 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger data-testid="select-category">
                         <SelectValue placeholder="Select category" />
@@ -164,7 +178,7 @@ export function AppDialog({ open, onOpenChange, onSubmit, app }: AppDialogProps)
                     onValueChange={(value) =>
                       field.onChange(value === "none" ? undefined : value)
                     }
-                    defaultValue={field.value || "none"}
+                    value={field.value ?? "none"}
                   >
                     <FormControl>
                       <SelectTrigger data-testid="select-icon">
