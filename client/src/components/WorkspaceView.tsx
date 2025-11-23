@@ -10,6 +10,7 @@ interface WorkspaceViewProps {
   apps: App[];
 }
 
+
 const getFaviconUrl = (url: string) => {
   try {
     const u = new URL(url);
