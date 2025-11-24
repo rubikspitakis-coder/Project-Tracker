@@ -28,7 +28,7 @@ export default function Login() {
       });
 
       if (res.ok) {
-        queryClient.invalidateQueries({ queryKey: ["/api/auth/check"] });
+        await queryClient.invalidateQueries({ queryKey: ["/api/auth/check"] });
       } else {
         const data = await res.json();
         toast({
@@ -36,7 +36,6 @@ export default function Login() {
           description: data.error || "Invalid credentials",
           variant: "destructive",
         });
-        setIsLoading(false);
       }
     } catch (error) {
       toast({
@@ -44,6 +43,7 @@ export default function Login() {
         description: "Cannot connect to server",
         variant: "destructive",
       });
+    } finally {
       setIsLoading(false);
     }
   };
